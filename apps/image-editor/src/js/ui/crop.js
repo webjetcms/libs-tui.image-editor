@@ -34,7 +34,6 @@ class Crop extends Submenu {
 
         const classValue = cropBonusValues[i];
         const stringValue = cropBonusValues[i].replace('-', ':');
-        // const newButtonHTML = `<div class="tui-image-editor-button preset preset-${classValue}"><div><svg class="svg_ic-submenu"><use xlink:href="#ic-crop" class="normal use-default"></use><use xlink:href="#ic-crop" class="active use-default"></use></svg></div><label> ${stringValue} </label></div>`;
         const newButtonHTML = `<div class="tui-image-editor-button preset preset-${classValue}"><div>${makeSvgIcon(
           ['normal', 'active'],
           'crop',
