@@ -143,4 +143,9 @@ export default ({
         fill: ${submenuIconStyle.active.color};
         stroke: ${submenuIconStyle.active.color};
     }
+    .preset-dimension-label {
+        color: white;
+        font-size: 11px;
+        font-family: "Noto Sans", sans-serif;
+    }
 `;

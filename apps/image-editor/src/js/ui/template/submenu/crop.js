@@ -19,36 +19,6 @@ export default ({ locale, makeSvgIcon }) => `
                 </div>
                 <label> ${locale.localize('Square')} </label>
             </div>
-            <div class="tui-image-editor-button preset preset-3-2">
-                <div>
-                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
-                </div>
-                <label> ${locale.localize('3:2')} </label>
-            </div>
-            <div class="tui-image-editor-button preset preset-4-3">
-                <div>
-                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
-                </div>
-                <label> ${locale.localize('4:3')} </label>
-            </div>
-            <div class="tui-image-editor-button preset preset-5-4">
-                <div>
-                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
-                </div>
-                <label> ${locale.localize('5:4')} </label>
-            </div>
-            <div class="tui-image-editor-button preset preset-7-5">
-                <div>
-                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
-                </div>
-                <label> ${locale.localize('7:5')} </label>
-            </div>
-            <div class="tui-image-editor-button preset preset-16-9">
-                <div>
-                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
-                </div>
-                <label> ${locale.localize('16:9')} </label>
-            </div>
         </li>
         <li class="tui-image-editor-partition tui-image-editor-newline">
         </li>

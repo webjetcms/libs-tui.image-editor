@@ -10,7 +10,11 @@ import { defaultResizePixelValues } from '@/consts';
  * @ignore
  */
 class Resize extends Submenu {
-  constructor(subMenuElement, { locale, makeSvgIcon, menuBarPosition, usageStatistics }) {
+  constructor(
+    subMenuElement,
+    { locale, makeSvgIcon, menuBarPosition, usageStatistics },
+    resizePresetDimensions
+  ) {
     super(subMenuElement, {
       locale,
       name: 'resize',
@@ -23,6 +27,19 @@ class Resize extends Submenu {
     this.status = 'active';
 
     this._lockState = false;
+
+    const presetDimensionSelect = subMenuElement.querySelector('#presetDimensionSelect');
+    if (presetDimensionSelect && Array.isArray(resizePresetDimensions) === true) {
+      for (let i = 0; i < resizePresetDimensions.length; i = i + 1) {
+        // Filter out wrong format values
+        if (/^\d+x\d+$/.test(resizePresetDimensions[i]) === false) continue;
+
+        const option = document.createElement('option');
+        option.value = resizePresetDimensions[i];
+        option.text = resizePresetDimensions[i];
+        presetDimensionSelect.appendChild(option);
+      }
+    }
 
     /**
      * Original dimensions
@@ -49,6 +66,7 @@ class Resize extends Submenu {
       lockAspectRatio: this.selector('.tie-lock-aspect-ratio'),
       apply: this.selector('.tie-resize-button .apply'),
       cancel: this.selector('.tie-resize-button .cancel'),
+      presetDimensionSelect: this.selector('#presetDimensionSelect'),
     };
   }
 
@@ -161,12 +179,20 @@ class Resize extends Submenu {
    *   @param {Function} actions.reset - reset action
    */
   addEvent(actions) {
-    this._els.widthRange.on('change', this._changeWidthRangeHandler.bind(this));
-    this._els.heightRange.on('change', this._changeHeightRangeHandler.bind(this));
+    this._els.widthRange.on('change', (value) =>
+      this._changeWidthRangeHandler(value, this._els.presetDimensionSelect)
+    );
+    this._els.heightRange.on('change', (value) =>
+      this._changeHeightRangeHandler(value, this._els.presetDimensionSelect)
+    );
     this._els.lockAspectRatio.addEventListener('change', this._changeLockAspectRatio.bind(this));
 
-    const apply = this._applyEventHandler.bind(this);
-    const cancel = this._cancelEventHandler.bind(this);
+    this._els.presetDimensionSelect.addEventListener('change', (event) =>
+      this._changePresetDimension(event, this._els.lockAspectRatio)
+    );
+
+    const apply = this._applyEventHandler.bind(this, this._els.presetDimensionSelect);
+    const cancel = this._cancelEventHandler.bind(this, this._els.presetDimensionSelect);
 
     this.eventHandler = {
       apply,
@@ -183,8 +209,11 @@ class Resize extends Submenu {
    * @param {number} value - width range value
    * @private
    */
-  _changeWidthRangeHandler(value) {
+  _changeWidthRangeHandler(value, presetDimensionSelect) {
     this.actions.preview('width', toInteger(value), this._lockState);
+
+    // Set default NONE option
+    presetDimensionSelect.value = 'none';
   }
 
   /**
@@ -192,8 +221,11 @@ class Resize extends Submenu {
    * @param {number} value - height range value
    * @private
    */
-  _changeHeightRangeHandler(value) {
+  _changeHeightRangeHandler(value, presetDimensionSelect) {
     this.actions.preview('height', toInteger(value), this._lockState);
+
+    // Set default NONE option
+    presetDimensionSelect.value = 'none';
   }
 
   /**
@@ -203,7 +235,8 @@ class Resize extends Submenu {
    */
   _changeLockAspectRatio(event) {
     this._lockState = event.target.checked;
-    this.actions.lockAspectRatio(this._lockState);
+    // This line was creating error because lockAspectRatio does not exist in actions
+    // this.actions.lockAspectRatio(this._lockState);
   }
 
   /**
@@ -215,14 +248,20 @@ class Resize extends Submenu {
     this._els.cancel.removeEventListener('click', this.eventHandler.cancel);
   }
 
-  _applyEventHandler() {
+  _applyEventHandler(presetDimensionSelect) {
     this.actions.resize();
     this._els.apply.classList.remove('active');
+
+    // Set default NONE option
+    presetDimensionSelect.value = 'none';
   }
 
-  _cancelEventHandler() {
+  _cancelEventHandler(presetDimensionSelect) {
     this.actions.reset();
     this._els.cancel.classList.remove('active');
+
+    // Set default NONE option
+    presetDimensionSelect.value = 'none';
   }
 
   /**
@@ -234,6 +273,25 @@ class Resize extends Submenu {
       this._els.apply.classList.add('active');
     } else {
       this._els.apply.classList.remove('active');
+    }
+  }
+
+  _changePresetDimension(event, lockAspectRatio) {
+    // eslint-disable-next-line prefer-destructuring
+    const value = event.target.value;
+
+    // Check format validation
+    if (/^\d+x\d+$/.test(value) === true) {
+      // Set new width and height by preset dimension
+      const width = toInteger(value.split('x')[0]);
+      const height = toInteger(value.split('x')[1]);
+      this.actions.preview('width', width, this._lockState);
+      this.actions.preview('height', height, this._lockState);
+
+      this.setWidthValue(width, false);
+      this.setHeightValue(height, false);
+
+      lockAspectRatio.checked = false;
     }
   }
 }

@@ -21,11 +21,19 @@ export default ({ locale, makeSvgIcon }) => `
         <li class="tui-image-editor-partition only-left-right">
             <div></div>
         </li>
-        <li class="tui-image-editor-submenu-align">
+        <li class="tui-image-editor-submenu-align" style="display: inline-flex;">
+            <div class="tui-image-editor-partition" style="padding-right: 15px;">
+                <label class="preset-dimension-label">${locale.localize(
+                  'Preset Dimensions'
+                )}</label>
+                <select id="presetDimensionSelect">
+                    <option value="none">${locale.localize('presetDimensionNoneOption')}</option>
+                </select>
+            </div>
             <div class="tui-image-editor-checkbox-wrap">
                 <div class="tui-image-editor-checkbox">
                     <label>
-                        <input type="checkbox" class="tie-lock-aspect-ratio">
+                        <input type="checkbox" class="tie-lock-aspect-ratio" checked>
                         <span>${locale.localize('Lock Aspect Ratio')}</span>
                     </label>
                 </div>
