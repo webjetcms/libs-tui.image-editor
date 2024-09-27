@@ -112,8 +112,8 @@ const {
  * @param {string|HTMLElement} wrapper - Wrapper's element or selector
  * @param {Object} [options] - Canvas max width & height of css
  *  @param {number} [options.includeUI] - Use the provided UI
- *    @param {Array} [options.includeUI.cropBonusValues=null] - SIVAN kills KOKOS
- *    @param {Array} [options.includeUI.resizePresetDimensions=null] - SIVAN kills KOKOS AGAIN
+ *    @param {Array} [options.includeUI.cropBonusValues=null] - WebJetCMS - Crop Bonus Values
+ *    @param {Array} [options.includeUI.resizePresetDimensions=null] - WebJetCMS - Resize Preset Dimensions
  *    @param {Object} [options.includeUI.loadImage] - Basic editing image
  *      @param {string} options.includeUI.loadImage.path - image path
  *      @param {string} options.includeUI.loadImage.name - image name
