@@ -301,12 +301,36 @@ class Ui {
       this._buttonElements[menuName] = this._menuBarElement.querySelector(`.tie-btn-${menuName}`);
 
       // submenu ui instance
-      this[menuName] = new SubComponentClass(this._subMenuElement, {
-        locale: this._locale,
-        makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme),
-        menuBarPosition: this.options.menuBarPosition,
-        usageStatistics: this.options.usageStatistics,
-      });
+      if (menuName.toUpperCase() === 'CROP') {
+        this[menuName] = new SubComponentClass(
+          this._subMenuElement,
+          {
+            locale: this._locale,
+            makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme),
+            menuBarPosition: this.options.menuBarPosition,
+            usageStatistics: this.options.usageStatistics,
+          },
+          this.options.cropBonusValues
+        );
+      } else if (menuName.toUpperCase() === 'RESIZE') {
+        this[menuName] = new SubComponentClass(
+          this._subMenuElement,
+          {
+            locale: this._locale,
+            makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme),
+            menuBarPosition: this.options.menuBarPosition,
+            usageStatistics: this.options.usageStatistics,
+          },
+          this.options.resizePresetDimensions
+        );
+      } else {
+        this[menuName] = new SubComponentClass(this._subMenuElement, {
+          locale: this._locale,
+          makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme),
+          menuBarPosition: this.options.menuBarPosition,
+          usageStatistics: this.options.usageStatistics,
+        });
+      }
     });
   }
 

@@ -9,7 +9,11 @@ import { assignmentForDestroy } from '@/util';
  * @ignore
  */
 class Crop extends Submenu {
-  constructor(subMenuElement, { locale, makeSvgIcon, menuBarPosition, usageStatistics }) {
+  constructor(
+    subMenuElement,
+    { locale, makeSvgIcon, menuBarPosition, usageStatistics },
+    cropBonusValues
+  ) {
     super(subMenuElement, {
       locale,
       name: 'crop',
@@ -20,6 +24,35 @@ class Crop extends Submenu {
     });
 
     this.status = 'active';
+
+    // Add bonus crop values to the crop submenu
+    const submenuDiv = subMenuElement.querySelector('li.tie-crop-preset-button');
+    if (submenuDiv && Array.isArray(cropBonusValues) === true) {
+      for (let i = 0; i < cropBonusValues.length; i = i + 1) {
+        // Filter out wrong format values
+        if (/^\d+-\d+$/.test(cropBonusValues[i]) === false) continue;
+
+        const classValue = cropBonusValues[i];
+        const stringValue = cropBonusValues[i].replace('-', ':');
+        // const newButtonHTML = `<div class="tui-image-editor-button preset preset-${classValue}"><div><svg class="svg_ic-submenu"><use xlink:href="#ic-crop" class="normal use-default"></use><use xlink:href="#ic-crop" class="active use-default"></use></svg></div><label> ${stringValue} </label></div>`;
+        const newButtonHTML = `<div class="tui-image-editor-button preset preset-${classValue}"><div>${makeSvgIcon(
+          ['normal', 'active'],
+          'crop',
+          true
+        )}</div><label> ${locale.localize(stringValue)} </label></div>`;
+
+        // Create a temporary container to hold the HTML string
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = newButtonHTML;
+
+        // Extract the first child node from the temporary container
+        const newButtonNode = tempContainer.firstChild;
+
+        if (newButtonNode) {
+          submenuDiv.appendChild(newButtonNode);
+        }
+      }
+    }
 
     this._els = {
       apply: this.selector('.tie-crop-button .apply'),

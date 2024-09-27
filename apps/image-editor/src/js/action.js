@@ -9,11 +9,11 @@ export default {
    * @returns {Object} actions for ui
    * @private
    */
-  getActions() {
+  getActions(UIOption) {
     return {
       main: this._mainAction(),
       shape: this._shapeAction(),
-      crop: this._cropAction(),
+      crop: this._cropAction(UIOption.cropBonusValues),
       resize: this._resizeAction(),
       flip: this._flipAction(),
       rotate: this._rotateAction(),
@@ -354,7 +354,7 @@ export default {
    * @returns {Object} actions for ui crop
    * @private
    */
-  _cropAction() {
+  _cropAction(cropBonusValues) {
     return extend(
       {
         crop: () => {
@@ -396,8 +396,7 @@ export default {
               this.setCropzoneRect(16 / 9);
               break;
             default:
-              this.setCropzoneRect();
-              this.ui.crop.changeApplyButtonStatus(false);
+              this.resolveCropBonusValues(presetType, cropBonusValues);
               break;
           }
         },

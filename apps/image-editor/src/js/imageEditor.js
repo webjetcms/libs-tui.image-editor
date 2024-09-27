@@ -1,3 +1,4 @@
+/* eslint-disable max-depth */
 import { fabric } from 'fabric';
 import extend from 'tui-code-snippet/object/extend';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
@@ -111,6 +112,8 @@ const {
  * @param {string|HTMLElement} wrapper - Wrapper's element or selector
  * @param {Object} [options] - Canvas max width & height of css
  *  @param {number} [options.includeUI] - Use the provided UI
+ *    @param {Array} [options.includeUI.cropBonusValues=null] - SIVAN kills KOKOS
+ *    @param {Array} [options.includeUI.resizePresetDimensions=null] - SIVAN kills KOKOS AGAIN
  *    @param {Object} [options.includeUI.loadImage] - Basic editing image
  *      @param {string} options.includeUI.loadImage.path - image path
  *      @param {string} options.includeUI.loadImage.name - image name
@@ -175,13 +178,13 @@ class ImageEditor {
 
     /**
      * UI instance
-     * @type {Ui}
+     * @type {UI}
      */
     if (options.includeUI) {
       const UIOption = options.includeUI;
       UIOption.usageStatistics = options.usageStatistics;
 
-      this.ui = new UI(wrapper, UIOption, this.getActions());
+      this.ui = new UI(wrapper, UIOption, this.getActions(UIOption));
       options = this.ui.setUiDefaultSelectionStyle(options);
     }
 
@@ -844,6 +847,30 @@ class ImageEditor {
    */
   setCropzoneRect(mode) {
     this._graphics.setCropzoneRect(mode);
+  }
+
+  resolveCropBonusValues(presetType, cropBonusValues) {
+    let found = false;
+    if (Array.isArray(cropBonusValues) === true) {
+      for (let i = 0; i < cropBonusValues.length; i = i + 1) {
+        const bonusValue = cropBonusValues[i];
+        if (/^\d+-\d+$/.test(bonusValue)) {
+          if (presetType === `preset-${bonusValue}`) {
+            const values = bonusValue.split('-');
+            this.setCropzoneRect(Number(values[0]) / Number(values[1]));
+            found = true;
+            break;
+          }
+        } else {
+          // Skip wrong format
+          continue;
+        }
+      }
+    }
+    if (found === false) {
+      this.setCropzoneRect();
+      this.ui.crop.changeApplyButtonStatus(false);
+    }
   }
 
   /**
