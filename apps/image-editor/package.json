@@ -1,6 +1,6 @@
 {
-  "name": "tui-image-editor",
-  "version": "3.15.3",
+  "name": "@webjetcms/tui-image-editor",
+  "version": "3.15.302",
   "description": "TOAST UI ImageEditor",
   "keywords": [
     "nhn",
@@ -45,7 +45,7 @@
     "not ie <= 9"
   ],
   "dependencies": {
-    "fabric": "^4.2.0",
+    "fabric": "^5.2.4",
     "tui-code-snippet": "^2.3.3",
     "tui-color-picker": "^2.2.6"
   }
