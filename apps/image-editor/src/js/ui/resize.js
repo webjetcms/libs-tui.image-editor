@@ -26,7 +26,7 @@ class Resize extends Submenu {
 
     this.status = 'active';
 
-    this._lockState = false;
+    this._lockState = true;
 
     const presetDimensionSelect = subMenuElement.querySelector('#presetDimensionSelect');
     if (presetDimensionSelect && Array.isArray(resizePresetDimensions) === true) {
@@ -188,7 +188,7 @@ class Resize extends Submenu {
     this._els.lockAspectRatio.addEventListener('change', this._changeLockAspectRatio.bind(this));
 
     this._els.presetDimensionSelect.addEventListener('change', (event) =>
-      this._changePresetDimension(event, this._els.lockAspectRatio)
+      this._changePresetDimension(event)
     );
 
     const apply = this._applyEventHandler.bind(this, this._els.presetDimensionSelect);
@@ -276,7 +276,7 @@ class Resize extends Submenu {
     }
   }
 
-  _changePresetDimension(event, lockAspectRatio) {
+  _changePresetDimension(event) {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
 
@@ -285,13 +285,22 @@ class Resize extends Submenu {
       // Set new width and height by preset dimension
       const width = toInteger(value.split('x')[0]);
       const height = toInteger(value.split('x')[1]);
-      this.actions.preview('width', width, this._lockState);
-      this.actions.preview('height', height, this._lockState);
 
-      this.setWidthValue(width, false);
-      this.setHeightValue(height, false);
+      if (this._lockState === true) {
+        // Set only width value
+        // Trigger is TRUE, so it fire event and height value will be calculated by aspect ratio
+        this.setWidthValue(width, true);
+      } else {
+        // Lock state is FALSE
 
-      lockAspectRatio.checked = false;
+        // Set exact width and height values by preset dimension
+        this.actions.preview('width', width, this._lockState);
+        this.actions.preview('height', height, this._lockState);
+
+        // Set width and height values of range selectors BUT do not fire change event
+        this.setWidthValue(width, false);
+        this.setHeightValue(height, false);
+      }
     }
   }
 }
