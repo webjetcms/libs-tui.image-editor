@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 nvm install
 nvm use
