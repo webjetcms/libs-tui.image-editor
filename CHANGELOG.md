@@ -1,5 +1,9 @@
 # WebJET CMS Integration branch
 
+## 3.15.304
+
+- Fixed translations of `Double Click` text (#57201)
+
 ## 3.15.302
 
 - Add support for external set of Resize templates `options.includeUI.resizePresetDimensions` and Crop templates `options.includeUI.cropBonusValues` (#57201)

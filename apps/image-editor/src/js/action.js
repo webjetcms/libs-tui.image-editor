@@ -583,8 +583,9 @@ export default {
       addText: (pos) => {
         const { textColor: fill, fontSize, fontStyle, fontWeight, underline } = this.ui.text;
         const fontFamily = 'Noto Sans';
+        const defaultText = this.ui._locale.localize('Double Click');
 
-        this.addText('Double Click', {
+        this.addText(defaultText, {
           position: pos.originPosition,
           styles: { fill, fontSize, fontFamily, fontStyle, fontWeight, underline },
         }).then(() => {
