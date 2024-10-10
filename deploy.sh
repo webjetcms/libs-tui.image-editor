@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
+
+. ~/.nvm/nvm.sh
 
 nvm install
 nvm use
